@@ -21,5 +21,10 @@
         <input type="text" name="location"><br>
         <input type="submit" value="Add location" class="add">
         </form>
+
+        <form action='/logout' method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="logout">
+        </form>
     </body>
 </html>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import User, Message, Room
 from django.contrib import messages
+from django.db.models import Count
 
 def index(request):
     request.session['success'] = False
@@ -45,7 +46,9 @@ def login(request):
     return redirect('/success')
 
 def chatroom(request):
-    context = {'room': Room.objects.get(id = request.session['roomid']),
+    if "userid" not in request.session:
+        return redirect('/')
+    context = {'room': Room.objects.annotate(count=Count('users')).get(id = request.session['roomid']),
                 'user': User.objects.get(id = request.session['userid'])}
     return render(request, 'talktome/chat.html', context)
 
@@ -57,13 +60,24 @@ def makeroom(request):
     if 'error' in new_room:
         messages.error(request, message['error'])
         return redirect('/success')
-    request.session['roomid'] = new_room['room'].id
+    if 'room' in new_room:
+        request.session['roomid'] = new_room['room'].id
     return redirect('/chatroom')
+
+
 
 def addmessage(request, roomid):
     if request.method == "GET":
         return redirect('/')
-    message = Message.objects.addmessage(request.POST['message'], roomid)
+    user = User.objects.get(id=request.session['userid'])
+    message = Message.objects.addmessage(request.POST['message'], roomid, user)
     if 'error' in message:
         messages.error(request, message['error'])
     return redirect('/chatroom')
+
+def logout(request):
+    if request.method == "GET":
+        messages.error(request, "You need to log in to log out")
+        return redirect('/')
+    del request.session['userid']
+    return redirect('/')

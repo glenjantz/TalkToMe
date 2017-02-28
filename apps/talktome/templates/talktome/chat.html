@@ -17,15 +17,21 @@
         </ul>
         {% endif %}
         {{room.name}}<br>
+        {{room.count}}<br>
         <div id="thisdiv">
             {% for message in room.messages.all %}
-            {{user.username}}: {{message.content}}<br>
+            {{message.creator.username}}: {{message.content}}<br>
             {% endfor %}
         </div>
         <form action='/addmessage/{{room.id}}' method='POST'>
         {% csrf_token %}
         <input type="text" name="message"><br>
         <input type="submit" value="Message" class="add">
+        </form>
+
+        <form action='/logout' method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="logout">
         </form>
     </body>
 </html>

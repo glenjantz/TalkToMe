@@ -4,7 +4,7 @@ from django.db import models
 import bcrypt
 from datetime import datetime
 import datetime
-from django.db.models import Count, Q
+from django.db.models import Count
 
 
 class RoomManager(models.Manager):
@@ -13,14 +13,31 @@ class RoomManager(models.Manager):
         if len(postData['location']) < 1:
             return {'error': 'Nothing written!'}
         else:
-            check = Room.objects.annotate(count = (Count('users'))).filter(count__lte = 1).filter(Q(users__location=user.location, name=postData['location'])| Q(users__location=postData['location'], name = user.location))
-            if (check == True):
-                this_room = check[0]
+            #count the users in the rooms with 1 person or 0? where the users location is = the users location and roomname is = location requested
+            # OR users location is = requested location and roomname is = to users location
+            #usercount = Room.objects.annotate(count = (Count('users'))).filter(count__lte = 1)
+
+            # check = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(Q(users__location=user.location, name=postData['location'])|
+            #  Q(users__location=postData['location'], name = user.location))
+
+            check1 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=user.location, name=postData['location'])
+            check2 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=postData['location'], name = user.location)
+            if len(check1) > 0:
+                print "hey"
+                this_room = check1[0]
+                User.objects.filter(id=user.id).update(room=this_room)
                 return {'room': this_room }
+            elif len(check2) > 0:
+                print "heyhey"
+                this_room = check2[0]
+                User.objects.filter(id=user.id).update(room=this_room)
+                return {'room': this_room }
+                    #change this object key to something else
             else:
                 new_room = Room.objects.create(name=postData['location'])
                 User.objects.filter(id=user.id).update(room=new_room)
                 return {'room': new_room }
+
 
 class Room(models.Model):
       name = models.CharField(max_length=100)
@@ -98,16 +115,17 @@ class User(models.Model):
 
 class MessageManager(models.Manager):
 
-    def addmessage(self, postData, roomid):
+    def addmessage(self, postData, roomid, user):
         if len(postData) < 1:
             return {'error': 'Nothing written!'}
         else:
             this_room = Room.objects.get(id = roomid)
-            Message.objects.create(content=postData, message_room = this_room)
+            Message.objects.create(content=postData, message_room = this_room, creator = user)
             return {}
 
 class Message(models.Model):
       content = models.TextField(max_length=1000)
+      creator = models.ForeignKey(User, blank=True, null=True)
       message_room = models.ForeignKey(Room, related_name="messages", blank=True, null = True)
       created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
       updated_at = models.DateTimeField(auto_now = True)

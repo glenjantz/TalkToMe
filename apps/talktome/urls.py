@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^makeroom$', views.makeroom),
     url(r'^chatroom$', views.chatroom),
     url(r'^addmessage/(?P<roomid>\d+)$', views.addmessage),
+    url(r'^logout$', views.logout),
     url(r'^.+$', views.index),
 ]
