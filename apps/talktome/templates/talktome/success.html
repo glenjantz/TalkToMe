@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Success</title>
+        {% load staticfiles %}
+    </head>
+    <script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script type ="text/javascript" src= "{% static 'talktome/js/main.js' %}"></script>
+    <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h2>What location do you want?</h2>
+        <form action='/makeroom' method='POST'>
+        {% csrf_token %}
+        <input type="text" name="location"><br>
+        <input type="submit" value="Add location" class="add">
+        </form>
+    </body>
+</html>
