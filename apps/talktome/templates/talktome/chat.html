@@ -18,11 +18,13 @@
         {% endif %}
         {{room.name}}<br>
         {{room.count}}<br>
+        <div id="outerdiv">
         <div id="thisdiv">
             {% for message in room.messages.all %}
             {{message.creator.username}}: {{message.content}}<br>
             {% endfor %}
         </div>
+      </div>
         <form action='/addmessage/{{room.id}}' method='POST'>
         {% csrf_token %}
         <input type="text" name="message"><br>

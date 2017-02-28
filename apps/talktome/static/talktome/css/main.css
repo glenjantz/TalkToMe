@@ -1,6 +1,11 @@
+#outerdiv {
+  height : 200px;
+  width: 400px;
+  border: 1px black solid;
+}
 #thisdiv {
     overflow: scroll;
     height: 200px;
     width:400px;
-    border: 1px black solid;
+
 }
