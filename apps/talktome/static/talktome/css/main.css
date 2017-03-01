@@ -1,11 +1,20 @@
+*{margin:0;}
 #outerdiv {
   height : 200px;
   width: 400px;
   border: 1px black solid;
+  overflow: hidden;
+
 }
 #thisdiv {
-    overflow: scroll;
-    height: 200px;
-    width:400px;
+    height: 100%;
+    width:99%;
+    overflow: hidden;
+    padding-right: 15px;
+}
 
+
+html, body{
+    height: 99%;
+    overflow:hidden;
 }

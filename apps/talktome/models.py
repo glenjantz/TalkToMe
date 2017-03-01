@@ -20,14 +20,14 @@ class RoomManager(models.Manager):
             # check = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(Q(users__location=user.location, name=postData['location'])|
             #  Q(users__location=postData['location'], name = user.location))
 
-            check1 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=user.location, name=postData['location'])
+            # check1 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=user.location, name=postData['location'])
             check2 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=postData['location'], name = user.location)
-            if len(check1) > 0:
-                print "hey"
-                this_room = check1[0]
-                User.objects.filter(id=user.id).update(room=this_room)
-                return {'room': this_room }
-            elif len(check2) > 0:
+            # if len(check1) > 0:
+            #     print "hey"
+            #     this_room = check1[0]
+            #     User.objects.filter(id=user.id).update(room=this_room)
+            #     return {'room': this_room }
+            if len(check2) > 0:
                 print "heyhey"
                 this_room = check2[0]
                 User.objects.filter(id=user.id).update(room=this_room)
