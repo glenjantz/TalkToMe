@@ -38,7 +38,6 @@ class RoomManager(models.Manager):
                 User.objects.filter(id=user.id).update(room=new_room)
                 return {'room': new_room }
 
-
 class Room(models.Model):
       name = models.CharField(max_length=100)
       created_at = models.DateTimeField(auto_now_add = True, blank=True, null=True)
@@ -107,7 +106,7 @@ class User(models.Model):
       username = models.CharField(max_length=200,  blank=True, null=True)
       password = models.CharField(max_length=200,  blank=True, null=True)
       location = models.CharField(max_length=200, blank=True, null=True)
-      room = models.ForeignKey(Room, related_name="users", blank=True, null = True)
+      room = models.ForeignKey(Room, related_name="users", blank=True, null = True, on_delete=models.SET_NULL)
       created_at = models.DateTimeField(auto_now_add = True)
       updated_at = models.DateTimeField(auto_now = True)
       objects = UserManager()

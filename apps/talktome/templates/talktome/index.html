@@ -3,32 +3,67 @@
     <head>
         <meta charset="utf-8">
         <title>TalkToMe | Home</title>
+        {%load staticfiles%}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="{%static 'talktome/js/index.js'%}"></script>
+        <link rel="stylesheet" href="{% static 'talktome/css/skeleton.css' %}">
+        <link rel="stylesheet" href="{% static 'talktome/css/normalize.css' %}">
     </head>
     <body>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    <h2>Register</h2>
-        <form action='/register' method='POST'>
-        {% csrf_token %}
-        <label for="username">Username:<input type="text" name="username"></label><br>
-        <label for="location">Location You Are From:<input type="text" name="location"></label><br>
-        <label for="password">Password:<input type="password" name="password"></label><br>
-        <label for="confirm">Confirm pw:<input type="password" name="confirm"></label><br>
-        <input type="submit" value="Register" class="register">
-        </form>
-    <h2>Login</h2>
-    <form action='/login' method='POST'>
-        {% csrf_token %}
-        <label for="username">Username:<input type="text" name="username"></label><br>
-        <label for="password">Password:<input type="password" name="password"></label><br>
-        <input type="submit" value="Login" class="login">
-    </form>
-
-
+      <div class="container">
+          {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+      <h2>Register</h2>
+          <form action='/register' method='POST'>
+          {% csrf_token %}
+          <div class="row">
+            <label class="three columns" for="username">Username:</label>
+            <input class="four columns" type="text" name="username"><br>
+          </div>
+          <div class="row">
+            <label class="three columns" for="dropdown">What country are you from:</label>
+            <select class="four columns" id="dropdown" name="location"></select><br>
+          </div>
+          <div class="row">
+            <label class="three columns" for="password">Password:</label>
+            <input class="four columns" type="password" name="password"><br>
+          </div>
+          <div class="row">
+            <label class="three columns" for="confirm">Confirm pw:</label>
+            <input class="four columns" type="password" name="confirm"><br>
+          </div>
+          <!-- <label for="username">Username:<input type="text" name="username"></label><br>
+          <label for="dropdown">What country are you from:<select id="dropdown" name="location"></select></label><br> -->
+          <!-- <select id="dropdown" name="location"></select><br> -->
+          <!-- <label for="location">Location You Are From:<input type="text" name="location"></label><br> -->
+          <!-- <label for="password">Password:<input type="password" name="password"></label><br>
+          <label for="confirm">Confirm pw:<input type="password" name="confirm"></label><br> -->
+          <input class="button-primary" type="submit" value="Register">
+          </form>
+      <h2>Login</h2>
+      <form action='/login' method='POST'>
+          {% csrf_token %}
+          <div class="row">
+           <label class="three columns" for="username">Username:</label>
+           <input class="four columns" type="text" name="username"><br>
+         </div>
+         <div class="row">
+           <label class="three columns" for="password">Password:</label>
+           <input class="four columns" type="password" name="password"><br>
+         </div>
+          <!-- <label for="username">Username:<input type="text" name="username"></label><br>
+          <label for="password">Password:<input type="password" name="password"></label><br> -->
+          <input class="button-primary" type="submit" value="Login">
+      </form>
+    <div>
     </body>
+
+
+
+
 </html>

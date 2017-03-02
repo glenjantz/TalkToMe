@@ -5,10 +5,14 @@
         <title>Chat</title>
         {% load staticfiles %}
         <link rel="stylesheet" type="text/css" href={%static "talktome/css/main.css"%}>
+        <link rel="stylesheet" href="{% static 'talktome/css/skeleton.css' %}">
+        <link rel="stylesheet" href="{% static 'talktome/css/normalize.css' %}">
     </head>
     <script src= 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
     <script type ="text/javascript" src= "{% static 'talktome/js/main.js' %}"></script>
     <body>
+      <div class="container">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -16,24 +20,30 @@
             {% endfor %}
         </ul>
         {% endif %}
-        {{room.name}}<br>
-        {{room.count}}<br>
+        <p class="title">Chat Between <b>{{room.name}}</b> and <b>{{user.location}}</b></p><br><br>
         <div id="outerdiv">
         <div id="thisdiv">
             {% for message in room.messages.all %}
-            {{message.creator.username}}: {{message.content}}<br>
+            <b>{{message.creator.username}}</b>:  {{message.content}}<br>
             {% endfor %}
         </div>
       </div>
+      <div id="whatever">
+        <br>
         <form action='/addmessage/{{room.id}}' method='POST'>
         {% csrf_token %}
-        <input type="text" name="message"><br>
-        <input type="submit" value="Message" class="add">
+        <input class="inputmessage" type="text" name="message" autofocus="autofocus">
+        <input class="button-primary" type="submit" value="Message">
         </form>
-
+        <form action='/deleteroom/{{room.id}}' method='POST'>
+        {% csrf_token %}
+        <input class="button-primary" type="submit" value="Return">
+        </form>
         <form action='/logout' method='POST'>
         {% csrf_token %}
-        <input type="submit" value="logout">
+        <input class="button-primary" type="submit" value="logout">
         </form>
+      </div>
+      </div>
     </body>
 </html>

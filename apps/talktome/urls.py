@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^success$', views.success),
     url(r'^makeroom$', views.makeroom),
     url(r'^chatroom$', views.chatroom),
+    url(r'^deleteroom/(?P<roomid>\d+)$', views.deleteroom),
     url(r'^addmessage/(?P<roomid>\d+)$', views.addmessage),
     url(r'^logout$', views.logout),
     url(r'^.+$', views.index),

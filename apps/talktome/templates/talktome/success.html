@@ -4,8 +4,13 @@
         <meta charset="utf-8">
         <title>Success</title>
         {% load staticfiles %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="{%static 'talktome/js/home.js'%}"></script>
+        <link rel="stylesheet" href="{% static 'talktome/css/skeleton.css' %}">
+        <link rel="stylesheet" href="{% static 'talktome/css/normalize.css' %}">
     </head>
     <body>
+      <div class="container">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -13,16 +18,22 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <h2>What location do you want?</h2>
+
+        <h3>Hey {{user.username}} from {{user.location}}!</h3>
+        <h2>What country do you want to chat with someone in?</h2>
         <form action='/makeroom' method='POST'>
         {% csrf_token %}
-        <input type="text" name="location"><br>
-        <input type="submit" value="Add location" class="add">
+        <!-- <input type="text" name="location"><br> -->
+        <select class="u-full-width" id="dropdown2" name="location">
+        </select> <br><br>
+
+        <input class="button-primary" type="submit" value="Add location">
         </form>
 
         <form action='/logout' method='POST'>
         {% csrf_token %}
-        <input type="submit" value="logout">
+        <input class="button-primary" type="submit" value="logout">
         </form>
+      </div>
     </body>
 </html>
