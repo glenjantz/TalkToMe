@@ -20,11 +20,16 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <p class="title">Chat Between <b>{{room.name}}</b> and <b>{{user.location}}</b></p><br><br>
+        <h4>Hey {{user.username}} from {{user.location}}!</h4>
+        <p class="title">Chat Between <b>{{room.roomname}}</b></p><br><br>
         <div id="outerdiv">
         <div id="thisdiv">
             {% for message in room.messages.all %}
-            <b>{{message.creator.username}}</b>:  {{message.content}}<br>
+            {% if message.creator == user %}
+            <span id="user"><b>{{message.creator.username}}</b></span>:  {{message.content}}<br>
+            {% else %}
+            <span id="otheruser"><b>{{message.creator.username}}</b></span>:  {{message.content}}<br></span>
+            {% endif %}
             {% endfor %}
         </div>
       </div>

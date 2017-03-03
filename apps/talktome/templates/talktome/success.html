@@ -5,7 +5,8 @@
         <title>Success</title>
         {% load staticfiles %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="{%static 'talktome/js/home.js'%}"></script>
+        <!-- <script src="{%static 'talktome/js/home.js'%}"></script> -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <link rel="stylesheet" href="{% static 'talktome/css/skeleton.css' %}">
         <link rel="stylesheet" href="{% static 'talktome/css/normalize.css' %}">
     </head>
@@ -23,8 +24,9 @@
         <h2>What country do you want to chat with someone in?</h2>
         <form action='/makeroom' method='POST'>
         {% csrf_token %}
-        <!-- <input type="text" name="location"><br> -->
         <select class="u-full-width" id="dropdown2" name="location">
+          <option name="United States of America" value="United States of America">United States of America</option>
+          <option name="Russia" value="Russia">Russia</option>
         </select> <br><br>
 
         <input class="button-primary" type="submit" value="Add location">
@@ -34,6 +36,44 @@
         {% csrf_token %}
         <input class="button-primary" type="submit" value="logout">
         </form>
+        <h4>Global Distribution of Users on TalkToMe</h4>
+      <div id="regions_div" style="width: 90%; height: 60%;"></div>
       </div>
     </body>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      countrylist = $.get('https://restcountries.eu/rest/v2/all', function() {
+        for(var i in countrylist.responseJSON) {
+          if(countrylist.responseJSON[i]['name'] != "United States of America" && countrylist.responseJSON[i]['name'] != "Russian Federation"){
+          $('#dropdown2').append("<option name= '"+countrylist.responseJSON[i]['name']+"' value= '"+countrylist.responseJSON[i]['name']+"' >"+countrylist.responseJSON[i]['name']+"</option>");
+          switch (countrylist.responseJSON[i]['name']){
+            case "Greenland": countryarray.push(['Greenland', {{countGreenland}}]);
+            case "Canada": countryarray.push(['Canada', {{countCanada}}]);
+            case "China": countryarray.push(['China', {{countChina}}]);
+            case "India": countryarray.push(['India', {{countIndia}}]);
+            case "Korea": countryarray.push(['Korea', {{countKorea}}]);
+            case "Japan": countryarray.push(['Japan', {{countJapan}}]);
+            case "Brazil": countryarray.push(['Brazil', {{countBrazil}}]);
+            case "Australia": countryarray.push(['Australia', {{countAustralia}}]);
+            default: countryarray.push([countrylist.responseJSON[i]['name'], 0]);
+          }
+          }
+        }
+      }, "json");
+      google.charts.load('current', {'packages':['geochart']});
+      google.charts.setOnLoadCallback(drawRegionsMap);
+      var countryarray = [['Country', 'Users']];
+      countryarray.push(['United States of America', {{countUS}}]);
+      countryarray.push(['Russia', {{countRussia}}]);
+      function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable(countryarray);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+      });
+    </script>
 </html>

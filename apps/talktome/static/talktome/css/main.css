@@ -13,10 +13,9 @@
     padding-left: 5px;
 }
 
-
 html, body{
     height: 99%;
-    overflow:hidden;
+    overflow: scroll;
 }
 .inputmessage {
   width: 575px;
@@ -27,4 +26,12 @@ html, body{
     width: 700px;
     text-align: center;
     margin: 50px 0 0 0px;
+}
+
+#user {
+  color: green;
+}
+
+#otheruser {
+  color: blue;
 }

@@ -12,7 +12,6 @@ def register(request):
         messages.error(request, "Nice try. Register first.")
         return redirect('/')
     user = User.objects.register(request.POST)
-    print request.POST
     if 'errors' in user:
         error = user['errors']
         for one in error:
@@ -28,7 +27,18 @@ def success(request):
     if ('userid' not in request.session) or ('success' not in request.session) or (request.session['success'] == False):
         messages.error(request, "Register or log in first.")
         return redirect('/')
-    context= {'user': User.objects.get(id=request.session['userid'])}
+    context= {'user': User.objects.get(id=request.session['userid']),
+            'countUS': len(User.objects.filter(location = "United States of America")),
+            'countRussia': len(User.objects.filter(location = "Russia")),
+            'countGreenland': len(User.objects.filter(location = "Greenland")),
+            'countCanada': len(User.objects.filter(location = "Canada")),
+            'countChina': len(User.objects.filter(location = "China")),
+            'countIndia': len(User.objects.filter(location = "India")),
+            'countKorea': len(User.objects.filter(location = "Korea")),
+            'countJapan': len(User.objects.filter(location = "Japan")),
+            'countAustralia': len(User.objects.filter(location = "Australia")),
+            'countBrazil': len(User.objects.filter(location = "Brazil")),
+            }
     return render(request, 'talktome/success.html', context)
 
 def login(request):
@@ -49,6 +59,7 @@ def login(request):
 
 def chatroom(request):
     if "userid" not in request.session:
+        messages.error(request, 'Not logged in.')
         return redirect('/')
     rooms = Room.objects.filter(id=request.session['roomid'])
     if len(rooms) == 0:
@@ -79,11 +90,7 @@ def deleteroom(request,roomid):
     if len(rooms) == 0:
         messages.error(request, 'the other user left you')
         return redirect('/success')
-    # Message.objects.filter(message_room__id = roomid).delete()
     Room.objects.get(id = roomid).delete()
-    print Room.objects.all()
-    print Message.objects.all()
-    # User.objects.filter(id = request.session['userid']).update(room=blank)
     return redirect('/success')
 
 def addmessage(request, roomid):
@@ -103,5 +110,11 @@ def logout(request):
     if request.method == "GET":
         messages.error(request, "You need to log in to log out")
         return redirect('/')
-    del request.session['userid']
+    if "roomid" in request.session:
+        del request.session['userid']
+    if "roomid" in request.session:
+        rooms = Room.objects.filter(id=request.session['roomid'])
+        if len(rooms) == 1:
+            Room.objects.get(id = request.session['roomid']).delete()
+        del request.session['roomid']
     return redirect('/')

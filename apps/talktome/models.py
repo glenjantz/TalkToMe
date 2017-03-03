@@ -13,38 +13,23 @@ class RoomManager(models.Manager):
         if len(postData['location']) < 1:
             return {'error': 'Nothing written!'}
         else:
-            #count the users in the rooms with 1 person or 0? where the users location is = the users location and roomname is = location requested
-            # OR users location is = requested location and roomname is = to users location
-            #usercount = Room.objects.annotate(count = (Count('users'))).filter(count__lte = 1)
-
-            # check = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(Q(users__location=user.location, name=postData['location'])|
-            #  Q(users__location=postData['location'], name = user.location))
-
-            # check1 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=user.location, name=postData['location'])
-            check2 = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=postData['location'], name = user.location)
-            # if len(check1) > 0:
-            #     print "hey"
-            #     this_room = check1[0]
-            #     User.objects.filter(id=user.id).update(room=this_room)
-            #     return {'room': this_room }
-            if len(check2) > 0:
-                print "heyhey"
-                this_room = check2[0]
+            check = Room.objects.annotate(count = (Count('users'))).filter(count = 1).filter(users__location=postData['location'], name = user.location)
+            if len(check) > 0:
+                this_room = check[0]
                 User.objects.filter(id=user.id).update(room=this_room)
                 return {'room': this_room }
-                    #change this object key to something else
             else:
                 new_room = Room.objects.create(name=postData['location'])
                 User.objects.filter(id=user.id).update(room=new_room)
+                Room.objects.filter(id=new_room.id).update(roomname=user.location + " and " + new_room.name)
                 return {'room': new_room }
 
 class Room(models.Model):
+      roomname = models.CharField(max_length=100, blank=True, null=True)
       name = models.CharField(max_length=100)
       created_at = models.DateTimeField(auto_now_add = True, blank=True, null=True)
       updated_at = models.DateTimeField(auto_now = True)
       objects = RoomManager()
-
-
 
 
 class UserManager(models.Manager):
